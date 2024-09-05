@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:personal_phone_dictionary/api/area_apis.dart';
 import 'package:personal_phone_dictionary/components/form_input_component.dart';
+import 'package:personal_phone_dictionary/components/toasts.dart';
 import 'package:personal_phone_dictionary/models/area_list_model.dart';
 import 'package:personal_phone_dictionary/utils/constants.dart';
 import 'package:personal_phone_dictionary/utils/secure_strorage.dart';
+import 'package:toastification/toastification.dart';
 
 class AddAreaSheetComponent extends StatefulWidget {
   final Widget widget;
@@ -23,7 +27,36 @@ class _AddAreaSheetComponentState extends State<AddAreaSheetComponent> {
     String userID = await secureStorage.readSecureData("userID");
     String companyID = await secureStorage.readSecureData("companyID");
 
-//AreaListModel model = AreaListModel(companyID: int.parse(companyID), userID: int.parse(userID) , areaID: areaID, areaTitle: areaTitle, inActive: inActive)
+    AreaListModel model = AreaListModel(
+        companyID: int.parse(companyID),
+        userID: int.parse(userID),
+        areaID: areaID,
+        areaTitle: _areaTitleController.text,
+        inActive: false);
+    String msg = "";
+    try {
+      msg = await areaInsertUpdate(model);
+      if (msg == "") {
+        if (mounted) {
+          ToastUtils.showOkToast(
+              context: context,
+              message: "Record Saved Successfully",
+              icon: const Icon(Icons.check));
+        }
+      } else {
+        if (mounted) {
+          ToastUtils.showErrorToast(
+              context: context, message: msg, icon: const Icon(Icons.check));
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        ToastUtils.showErrorToast(
+            context: context,
+            message: e.toString(),
+            icon: const Icon(Icons.check));
+      }
+    }
   }
 
   void _addAreaSheet() {
@@ -89,6 +122,9 @@ class _AddAreaSheetComponentState extends State<AddAreaSheetComponent> {
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(10))),
                             child: GestureDetector(
+                              onTap: () {
+                                onsubmit();
+                              },
                               child: Text(
                                 "SAVE",
                                 textAlign: TextAlign.center,

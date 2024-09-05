@@ -32,11 +32,11 @@ class AreaListModel {
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      'companyID': companyID,
-      'userID': userID,
-      'areaID': areaID,
-      'areaTitle': areaTitle,
-      'inActive': inActive,
+      'CompanyID': companyID,
+      'UserID': userID,
+      'AreaID': areaID,
+      'AreaTitle': areaTitle,
+      'InActive': inActive,
     };
   }
 
