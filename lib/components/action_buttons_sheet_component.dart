@@ -8,7 +8,6 @@ import 'package:personal_phone_dictionary/components/add_user_component.dart';
 import 'package:personal_phone_dictionary/components/add_visits_component.dart';
 import 'package:personal_phone_dictionary/components/bottom_navigation_bar.dart';
 import 'package:personal_phone_dictionary/components/schedule_visit_sheet_component.dart';
-import 'package:personal_phone_dictionary/components/text_input_component.dart';
 import 'package:personal_phone_dictionary/utils/constants.dart';
 
 class ActionButtonsSheetComponent extends StatefulWidget {
@@ -94,6 +93,11 @@ class _ActionButtonsSheetComponentState
       "title": "Area List",
       "icon": Icons.location_city_rounded,
       "type": "arealist",
+    },
+    {
+      "title": "Reference Types",
+      "icon": Icons.room_preferences,
+      "type": "referencetypelist",
     },
   ];
   List<Map<String, dynamic>> filteredItems = [];
@@ -338,6 +342,19 @@ class _ActionButtonsSheetComponentState
                               return GestureDetector(
                                 onTap: () {
                                   Navigator.of(context).pushNamed("/arealist");
+                                },
+                                child: _moreSectionsCard(
+                                    Colors.transparent,
+                                    filteredItems[index]["title"],
+                                    filteredItems[index]["icon"],
+                                    filteredItems[index]["type"]),
+                              );
+                            } else if (filteredItems[index]["type"] ==
+                                "referencetypelist") {
+                              return GestureDetector(
+                                onTap: () {
+                                  Navigator.of(context)
+                                      .pushNamed("/referencetypelist");
                                 },
                                 child: _moreSectionsCard(
                                     Colors.transparent,

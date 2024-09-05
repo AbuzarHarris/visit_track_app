@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:personal_phone_dictionary/api/reference_types_api.dart';
 import 'package:personal_phone_dictionary/components/form_input_component.dart';
+import 'package:personal_phone_dictionary/models/reference_type_model.dart';
 import 'package:personal_phone_dictionary/utils/constants.dart';
+import 'package:personal_phone_dictionary/utils/secure_strorage.dart';
 
 class AddReferencetypeSheetComponenet extends StatefulWidget {
   final Widget widget;
-  const AddReferencetypeSheetComponenet({super.key, required this.widget});
+  final ReferenceTypeModel? referenceTypeModel;
+  const AddReferencetypeSheetComponenet(
+      {super.key, required this.widget, this.referenceTypeModel});
 
   @override
   State<AddReferencetypeSheetComponenet> createState() =>
@@ -16,7 +21,39 @@ class _AddReferencetypeSheetComponenetState
     extends State<AddReferencetypeSheetComponenet> {
   final TextEditingController _referenceTypeTitleController =
       TextEditingController();
+
+  Future<void> _onSubmit() async {
+    try {
+      SecureStorage secureStorage = SecureStorage();
+      String userID = await secureStorage.readSecureData("userID");
+      String companyID = await secureStorage.readSecureData("companyID");
+
+      ReferenceTypeModel model = ReferenceTypeModel(
+          companyID: int.parse(userID),
+          userID: int.parse(companyID),
+          referenceTypeTitle: _referenceTypeTitleController.text,
+          referenceTypeID: widget.referenceTypeModel != null
+              ? widget.referenceTypeModel!.referenceTypeID
+              : 0,
+          inActive: false);
+
+      var apiResponse = await insertUpdateReferenceTypeAsync(model);
+
+      if (apiResponse.success) {
+        //TODO Show Success Toast
+      }
+    } catch (e) {
+      //TODO Show Error Toast
+      throw Exception(e);
+    }
+  }
+
   void _addReferenceTypeSheet() {
+    if (widget.referenceTypeModel != null) {
+      _referenceTypeTitleController.text =
+          widget.referenceTypeModel!.referenceTypeTitle;
+    }
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -75,8 +112,11 @@ class _AddReferencetypeSheetComponenetState
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(10))),
                             child: GestureDetector(
+                              onTap: _onSubmit,
                               child: Text(
-                                "SAVE",
+                                widget.referenceTypeModel != null
+                                    ? "SAVE"
+                                    : "UPDATE",
                                 textAlign: TextAlign.center,
                                 style: GoogleFonts.raleway(
                                     color: Colors.white,
