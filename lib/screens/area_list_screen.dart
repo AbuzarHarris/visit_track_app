@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:personal_phone_dictionary/api/area_apis.dart';
 import 'package:personal_phone_dictionary/components/add_area_sheet_component.dart';
 import 'package:personal_phone_dictionary/components/filtration_appbar_component.dart';
 import 'package:personal_phone_dictionary/models/area_list_model.dart';
+import 'package:personal_phone_dictionary/utils/common.dart';
 import 'package:personal_phone_dictionary/utils/constants.dart';
 
 class AreaListScreen extends StatefulWidget {
@@ -72,42 +75,56 @@ class _AreaListScreenState extends State<AreaListScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-              "Multan skdfjsdfklg sd fgsdfgjlsdk fgsdf ghklsdfkg sdf sdfkl gsdfgl sdflk ghsdfl gsdlfk ghsdfkl ghsdf gsdfhlg lsdf"),
-          const Divider(),
+          Text(
+            model.areaTitle,
+            style: GoogleFonts.raleway(fontSize: 18),
+          ),
+          Divider(
+            color: Colors.grey[200],
+          ),
           Row(
-            mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              AddAreaSheetComponent(
-                areaListModel: model,
-                widget: Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                      color: Colors.green,
-                      borderRadius: BorderRadius.circular(5)),
-                  child: const Center(
-                    child: Icon(
-                      Icons.edit,
-                      color: Colors.white,
-                      size: 16,
+              Row(
+                children: [
+                  Text(CommonFunctions.getTimeAgo(datetime: model.entryDate))
+                ],
+              ),
+              Row(
+                children: [
+                  AddAreaSheetComponent(
+                    areaListModel: model,
+                    widget: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                          color: Colors.green,
+                          borderRadius: BorderRadius.circular(5)),
+                      child: const Center(
+                        child: Icon(
+                          Icons.edit,
+                          color: Colors.white,
+                          size: 16,
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              ),
-              const SizedBox(
-                width: 10,
-              ),
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                    color: Colors.red, borderRadius: BorderRadius.circular(5)),
-                child: const Center(
-                  child: Icon(
-                    Icons.delete,
-                    color: Colors.white,
-                    size: 16,
+                  const SizedBox(
+                    width: 10,
                   ),
-                ),
+                  Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.circular(5)),
+                    child: const Center(
+                      child: Icon(
+                        Icons.delete,
+                        color: Colors.white,
+                        size: 16,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ],
           )
@@ -117,44 +134,45 @@ class _AreaListScreenState extends State<AreaListScreen> {
   }
 
   Future<List<AreaListModel>> getAreas() async {
-    List<AreaListModel> areas = [
-      AreaListModel(
-          companyID: 1,
-          userID: 1,
-          areaID: 1,
-          areaTitle: "Multan",
-          inActive: true),
-      AreaListModel(
-          companyID: 1,
-          userID: 1,
-          areaID: 1,
-          areaTitle: "Multan",
-          inActive: false),
-      AreaListModel(
-          companyID: 1,
-          userID: 1,
-          areaID: 1,
-          areaTitle: "Multan",
-          inActive: true),
-      AreaListModel(
-          companyID: 1,
-          userID: 1,
-          areaID: 1,
-          areaTitle: "Multan",
-          inActive: false),
-      AreaListModel(
-          companyID: 1,
-          userID: 1,
-          areaID: 1,
-          areaTitle: "Multan",
-          inActive: false),
-      AreaListModel(
-          companyID: 1,
-          userID: 1,
-          areaID: 1,
-          areaTitle: "Multan",
-          inActive: false),
-    ];
+    Future<List<AreaListModel>> areas = getAllAreas(null);
+    // [
+    //   AreaListModel(
+    //       companyID: 1,
+    //       userID: 1,
+    //       areaID: 1,
+    //       areaTitle: "Multan",
+    //       inActive: true),
+    //   AreaListModel(
+    //       companyID: 1,
+    //       userID: 1,
+    //       areaID: 1,
+    //       areaTitle: "Multan",
+    //       inActive: false),
+    //   AreaListModel(
+    //       companyID: 1,
+    //       userID: 1,
+    //       areaID: 1,
+    //       areaTitle: "Multan",
+    //       inActive: true),
+    //   AreaListModel(
+    //       companyID: 1,
+    //       userID: 1,
+    //       areaID: 1,
+    //       areaTitle: "Multan",
+    //       inActive: false),
+    //   AreaListModel(
+    //       companyID: 1,
+    //       userID: 1,
+    //       areaID: 1,
+    //       areaTitle: "Multan",
+    //       inActive: false),
+    //   AreaListModel(
+    //       companyID: 1,
+    //       userID: 1,
+    //       areaID: 1,
+    //       areaTitle: "Multan",
+    //       inActive: false),
+    // ];
 
     return areas;
   }
@@ -164,11 +182,11 @@ class _AreaListScreenState extends State<AreaListScreen> {
       return data;
     } else if (_selectedFiltraionIndex == 1) {
       return data.where((item) {
-        return item.inActive == true;
+        return item.inActive == false;
       }).toList();
     } else {
       return data.where((item) {
-        return item.inActive == false;
+        return item.inActive == true;
       }).toList();
     }
   }
@@ -203,9 +221,9 @@ class _AreaListScreenState extends State<AreaListScreen> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            const Text(
-                              "No products found!",
-                              style: TextStyle(fontSize: 20),
+                            Text(
+                              "No Area's found!",
+                              style: GoogleFonts.raleway(fontSize: 20),
                             ),
                             const SizedBox(
                               height: 10,
@@ -220,9 +238,9 @@ class _AreaListScreenState extends State<AreaListScreen> {
                                 decoration: BoxDecoration(
                                     color: Constants.primaryColor,
                                     borderRadius: BorderRadius.circular(10)),
-                                child: const Text(
+                                child: Text(
                                   "Go Back",
-                                  style: TextStyle(
+                                  style: GoogleFonts.raleway(
                                       color: Colors.white, fontSize: 18),
                                 ),
                               ),
