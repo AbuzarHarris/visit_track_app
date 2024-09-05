@@ -6,12 +6,14 @@ class AreaListModel {
   int areaID;
   String areaTitle;
   bool inActive;
+  String entryDate;
   AreaListModel({
     required this.companyID,
     required this.userID,
     required this.areaID,
     required this.areaTitle,
     required this.inActive,
+    required this.entryDate,
   });
 
   AreaListModel copyWith({
@@ -20,14 +22,15 @@ class AreaListModel {
     int? areaID,
     String? areaTitle,
     bool? inActive,
+    String? entryDate,
   }) {
     return AreaListModel(
-      companyID: companyID ?? this.companyID,
-      userID: userID ?? this.userID,
-      areaID: areaID ?? this.areaID,
-      areaTitle: areaTitle ?? this.areaTitle,
-      inActive: inActive ?? this.inActive,
-    );
+        companyID: companyID ?? this.companyID,
+        userID: userID ?? this.userID,
+        areaID: areaID ?? this.areaID,
+        areaTitle: areaTitle ?? this.areaTitle,
+        inActive: inActive ?? this.inActive,
+        entryDate: entryDate ?? this.entryDate);
   }
 
   Map<String, dynamic> toMap() {
@@ -37,16 +40,18 @@ class AreaListModel {
       'AreaID': areaID,
       'AreaTitle': areaTitle,
       'InActive': inActive,
+      'EntryDate': entryDate,
     };
   }
 
   factory AreaListModel.fromMap(Map<String, dynamic> map) {
     return AreaListModel(
-      companyID: map['companyID'] as int,
-      userID: map['userID'] as int,
-      areaID: map['areaID'] as int,
-      areaTitle: map['areaTitle'] as String,
-      inActive: map['inActive'] as bool,
+      companyID: map['CompanyID'] as int,
+      userID: map['UserID'] as int,
+      areaID: map['AreaID'] as int,
+      areaTitle: map['AreaTitle'] as String,
+      inActive: map['InActive'] as bool,
+      entryDate: map['EntryDate'] as String,
     );
   }
 

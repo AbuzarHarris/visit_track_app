@@ -32,7 +32,8 @@ class _AddAreaSheetComponentState extends State<AddAreaSheetComponent> {
         userID: int.parse(userID),
         areaID: areaID,
         areaTitle: _areaTitleController.text,
-        inActive: false);
+        inActive: false,
+        entryDate: "");
     String msg = "";
     try {
       msg = await areaInsertUpdate(model);
@@ -42,6 +43,8 @@ class _AddAreaSheetComponentState extends State<AddAreaSheetComponent> {
               context: context,
               message: "Record Saved Successfully",
               icon: const Icon(Icons.check));
+          _clearValues();
+          Navigator.of(context).pop();
         }
       } else {
         if (mounted) {
@@ -57,6 +60,11 @@ class _AddAreaSheetComponentState extends State<AddAreaSheetComponent> {
             icon: const Icon(Icons.check));
       }
     }
+  }
+
+  void _clearValues() {
+    areaID = 0;
+    _areaTitleController.text = "";
   }
 
   void _addAreaSheet() {
