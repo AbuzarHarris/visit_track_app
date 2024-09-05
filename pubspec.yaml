@@ -46,6 +46,8 @@ dependencies:
   geolocator_android: ^4.6.1
   flutter_keyboard_visibility: ^6.0.0
   image_picker: ^1.1.2
+  fluttertoast: ^8.2.8
+  toastification: ^2.2.0
 
 dev_dependencies:
   flutter_test:
