@@ -32,6 +32,7 @@ class _AddNewContactState extends State<AddNewContact> {
   final TextEditingController _segmentIDController = TextEditingController();
   final TextEditingController _tehsilIDController = TextEditingController();
   final TextEditingController _drawerTextController = TextEditingController();
+  final TextEditingController _drawerTextControllerff = TextEditingController();
   bool showPassword = false;
   bool? sameAsMobileNo = false;
 
