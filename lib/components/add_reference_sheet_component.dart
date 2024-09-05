@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:personal_phone_dictionary/api/references_api.dart';
 import 'package:personal_phone_dictionary/components/form_input_component.dart';
 import 'package:personal_phone_dictionary/components/single_dropdown_component.dart';
+import 'package:personal_phone_dictionary/models/reference_model.dart';
 import 'package:personal_phone_dictionary/utils/constants.dart';
+import 'package:personal_phone_dictionary/utils/secure_strorage.dart';
 
 class AddReferenceSheetComponent extends StatefulWidget {
   final Widget widget;
-  const AddReferenceSheetComponent({super.key, required this.widget});
+  final ReferenceModel? referenceModel;
+  const AddReferenceSheetComponent(
+      {super.key, required this.widget, this.referenceModel});
 
   @override
   State<AddReferenceSheetComponent> createState() =>
@@ -18,6 +23,34 @@ class _AddReferenceSheetComponentState
   final TextEditingController _referenceNameController =
       TextEditingController();
   String referenceType = "";
+
+  Future<void> _onSubmit() async {
+    try {
+      SecureStorage secureStorage = SecureStorage();
+      String userID = await secureStorage.readSecureData("userID");
+      String companyID = await secureStorage.readSecureData("companyID");
+
+      ReferenceModel model = ReferenceModel(
+          companyID: int.parse(userID),
+          userID: int.parse(companyID),
+          referenceID: widget.referenceModel != null
+              ? widget.referenceModel!.referenceTypeID
+              : 0,
+          referenceTypeID: int.parse(referenceType),
+          referenceTitle: _referenceNameController.text,
+          inActive: false);
+
+      var apiResponse = await insertUpdateReferenceAsync(model);
+
+      if (apiResponse.success) {
+        //TODO Show Success Toast
+      }
+    } catch (e) {
+      //TODO Show Error Toast
+      throw Exception(e);
+    }
+  }
+
   void _addReferenceSheet() {
     showModalBottomSheet(
       context: context,
