@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:personal_phone_dictionary/components/form_input_component.dart';
 import 'package:personal_phone_dictionary/models/area_list_model.dart';
 import 'package:personal_phone_dictionary/utils/constants.dart';
+import 'package:personal_phone_dictionary/utils/secure_strorage.dart';
 
 class AddAreaSheetComponent extends StatefulWidget {
   final Widget widget;
@@ -16,10 +17,19 @@ class AddAreaSheetComponent extends StatefulWidget {
 
 class _AddAreaSheetComponentState extends State<AddAreaSheetComponent> {
   final TextEditingController _areaTitleController = TextEditingController();
+  int areaID = 0;
+  Future<void> onsubmit() async {
+    SecureStorage secureStorage = SecureStorage();
+    String userID = await secureStorage.readSecureData("userID");
+    String companyID = await secureStorage.readSecureData("companyID");
+
+//AreaListModel model = AreaListModel(companyID: int.parse(companyID), userID: int.parse(userID) , areaID: areaID, areaTitle: areaTitle, inActive: inActive)
+  }
 
   void _addAreaSheet() {
     if (widget.areaListModel != null) {
       _areaTitleController.text = widget.areaListModel!.areaTitle;
+      areaID = widget.areaListModel!.areaID;
     }
     showModalBottomSheet(
       context: context,
