@@ -1,8 +1,11 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:personal_phone_dictionary/api/area_apis.dart';
 import 'package:personal_phone_dictionary/components/add_area_sheet_component.dart';
 import 'package:personal_phone_dictionary/components/filtration_appbar_component.dart';
+import 'package:personal_phone_dictionary/components/toasts.dart';
 import 'package:personal_phone_dictionary/models/area_list_model.dart';
 import 'package:personal_phone_dictionary/utils/common.dart';
 import 'package:personal_phone_dictionary/utils/constants.dart';
@@ -75,9 +78,18 @@ class _AreaListScreenState extends State<AreaListScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            model.areaTitle,
-            style: GoogleFonts.raleway(fontSize: 18),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                model.areaTitle,
+                style: GoogleFonts.raleway(fontSize: 18),
+              ),
+              Text(
+                CommonFunctions.getTimeAgo(datetime: model.entryDate),
+                style: GoogleFonts.raleway(fontSize: 12),
+              )
+            ],
           ),
           Divider(
             color: Colors.grey[200],
@@ -87,13 +99,17 @@ class _AreaListScreenState extends State<AreaListScreen> {
             children: [
               Row(
                 children: [
-                  Text(CommonFunctions.getTimeAgo(datetime: model.entryDate))
+                  Text(
+                    model.inActive == true ? "In-Active" : "Active",
+                    style: GoogleFonts.raleway(fontSize: 12),
+                  ),
                 ],
               ),
               Row(
                 children: [
                   AddAreaSheetComponent(
                     areaListModel: model,
+                    edit: true,
                     widget: Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
@@ -111,16 +127,25 @@ class _AreaListScreenState extends State<AreaListScreen> {
                   const SizedBox(
                     width: 10,
                   ),
-                  Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                        color: Colors.red,
-                        borderRadius: BorderRadius.circular(5)),
-                    child: const Center(
-                      child: Icon(
-                        Icons.delete,
-                        color: Colors.white,
-                        size: 16,
+                  GestureDetector(
+                    onTap: () {
+                      CommonFunctions.deleteRecordConfirmDialog(
+                          context: context,
+                          ontap: () {
+                            deleteArea(model.areaID);
+                          });
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                          color: Colors.red,
+                          borderRadius: BorderRadius.circular(5)),
+                      child: const Center(
+                        child: Icon(
+                          Icons.delete,
+                          color: Colors.white,
+                          size: 16,
+                        ),
                       ),
                     ),
                   ),
@@ -135,45 +160,6 @@ class _AreaListScreenState extends State<AreaListScreen> {
 
   Future<List<AreaListModel>> getAreas() async {
     Future<List<AreaListModel>> areas = getAllAreas(null);
-    // [
-    //   AreaListModel(
-    //       companyID: 1,
-    //       userID: 1,
-    //       areaID: 1,
-    //       areaTitle: "Multan",
-    //       inActive: true),
-    //   AreaListModel(
-    //       companyID: 1,
-    //       userID: 1,
-    //       areaID: 1,
-    //       areaTitle: "Multan",
-    //       inActive: false),
-    //   AreaListModel(
-    //       companyID: 1,
-    //       userID: 1,
-    //       areaID: 1,
-    //       areaTitle: "Multan",
-    //       inActive: true),
-    //   AreaListModel(
-    //       companyID: 1,
-    //       userID: 1,
-    //       areaID: 1,
-    //       areaTitle: "Multan",
-    //       inActive: false),
-    //   AreaListModel(
-    //       companyID: 1,
-    //       userID: 1,
-    //       areaID: 1,
-    //       areaTitle: "Multan",
-    //       inActive: false),
-    //   AreaListModel(
-    //       companyID: 1,
-    //       userID: 1,
-    //       areaID: 1,
-    //       areaTitle: "Multan",
-    //       inActive: false),
-    // ];
-
     return areas;
   }
 
@@ -191,6 +177,36 @@ class _AreaListScreenState extends State<AreaListScreen> {
     }
   }
 
+  Future<void> deleteArea(int areaID) async {
+    try {
+      String msg = await deleteDelivery(areaID);
+      if (msg == "") {
+        if (mounted) {
+          ToastUtils.showOkToast(
+              context: context,
+              message: "Record Deleted Successfully!",
+              icon: const Icon(Icons.check));
+          Navigator.of(context).pushNamed("/arealist");
+        }
+      } else {
+        if (mounted) {
+          Navigator.of(context).pop();
+          ToastUtils.showErrorToast(
+              context: context,
+              message: msg.replaceAll("Exception: Exception: ", ""),
+              icon: const Icon(Icons.error));
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        ToastUtils.showErrorToast(
+            context: context,
+            message: e.toString().replaceAll("Exception: Exception: ", ""),
+            icon: const Icon(Icons.error));
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -200,7 +216,7 @@ class _AreaListScreenState extends State<AreaListScreen> {
         child: Column(
           children: [
             const FiltrationAppbarComponent(
-              title: "Addresses",
+              title: "Areas",
             ),
             const SizedBox(
               height: 20,
@@ -241,7 +257,7 @@ class _AreaListScreenState extends State<AreaListScreen> {
                                 child: Text(
                                   "Go Back",
                                   style: GoogleFonts.raleway(
-                                      color: Colors.white, fontSize: 18),
+                                      color: Colors.white, fontSize: 15),
                                 ),
                               ),
                             )

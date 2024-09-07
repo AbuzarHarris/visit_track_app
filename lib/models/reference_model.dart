@@ -8,14 +8,17 @@ class ReferenceModel {
   String referenceTitle;
   int referenceTypeID;
   bool inActive;
-  ReferenceModel({
-    required this.companyID,
-    required this.userID,
-    required this.referenceID,
-    required this.referenceTitle,
-    required this.referenceTypeID,
-    required this.inActive,
-  });
+  String entryDate;
+  String referenceTypeTitle;
+  ReferenceModel(
+      {required this.companyID,
+      required this.userID,
+      required this.referenceID,
+      required this.referenceTitle,
+      required this.referenceTypeID,
+      required this.inActive,
+      required this.entryDate,
+      required this.referenceTypeTitle});
 
   ReferenceModel copyWith({
     int? companyID,
@@ -24,6 +27,8 @@ class ReferenceModel {
     String? referenceTitle,
     int? referenceTypeID,
     bool? inActive,
+    String? entryDate,
+    String? referenceTypeTitle,
   }) {
     return ReferenceModel(
       companyID: companyID ?? this.companyID,
@@ -32,6 +37,8 @@ class ReferenceModel {
       referenceTitle: referenceTitle ?? this.referenceTitle,
       referenceTypeID: referenceTypeID ?? this.referenceTypeID,
       inActive: inActive ?? this.inActive,
+      entryDate: entryDate ?? this.entryDate,
+      referenceTypeTitle: referenceTypeTitle ?? this.referenceTypeTitle,
     );
   }
 
@@ -43,17 +50,20 @@ class ReferenceModel {
       'referenceTitle': referenceTitle,
       'referenceTypeID': referenceTypeID,
       'inActive': inActive,
+      'EntryDate': entryDate,
     };
   }
 
   factory ReferenceModel.fromMap(Map<String, dynamic> map) {
     return ReferenceModel(
-      companyID: map['companyID'] as int,
-      userID: map['userID'] as int,
-      referenceID: map['referenceID'] as int,
-      referenceTitle: map['referenceTitle'] as String,
-      referenceTypeID: map['referenceTypeID'] as int,
-      inActive: map['inActive'] as bool,
+      companyID: map['CompanyID'] as int,
+      userID: map['UserID'] as int,
+      referenceID: map['ReferenceID'] as int,
+      referenceTitle: map['ReferenceTitle'] as String,
+      referenceTypeID: map['ReferenceTypeID'] as int,
+      inActive: map['InActive'] as bool,
+      entryDate: map['EntryDate'] as String,
+      referenceTypeTitle: map['ReferenceTypeTitle'] as String,
     );
   }
 

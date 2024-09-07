@@ -99,6 +99,11 @@ class _ActionButtonsSheetComponentState
       "icon": Icons.room_preferences,
       "type": "referencetypelist",
     },
+    {
+      "title": "References List",
+      "icon": Icons.room_preferences,
+      "type": "referenceslist",
+    },
   ];
   List<Map<String, dynamic>> filteredItems = [];
   @override
@@ -290,31 +295,43 @@ class _ActionButtonsSheetComponentState
                               );
                             } else if (filteredItems[index]["type"] ==
                                 "addreference") {
-                              return Expanded(
-                                  child: AddReferenceSheetComponent(
-                                      widget: _moreSectionsCard(
-                                          Colors.transparent,
-                                          filteredItems[index]["title"],
-                                          filteredItems[index]["icon"],
-                                          filteredItems[index]["type"])));
+                              return Column(
+                                children: [
+                                  Expanded(
+                                      child: AddReferenceSheetComponent(
+                                          widget: _moreSectionsCard(
+                                              Colors.transparent,
+                                              filteredItems[index]["title"],
+                                              filteredItems[index]["icon"],
+                                              filteredItems[index]["type"]))),
+                                ],
+                              );
                             } else if (filteredItems[index]["type"] ==
                                 "addarea") {
-                              return Expanded(
-                                  child: AddAreaSheetComponent(
-                                      widget: _moreSectionsCard(
-                                          Colors.transparent,
-                                          filteredItems[index]["title"],
-                                          filteredItems[index]["icon"],
-                                          filteredItems[index]["type"])));
+                              return Column(
+                                children: [
+                                  Expanded(
+                                      child: AddAreaSheetComponent(
+                                          widget: _moreSectionsCard(
+                                              Colors.transparent,
+                                              filteredItems[index]["title"],
+                                              filteredItems[index]["icon"],
+                                              filteredItems[index]["type"]))),
+                                ],
+                              );
                             } else if (filteredItems[index]["type"] ==
                                 "adduser") {
-                              return Expanded(
-                                  child: AddUserSheetComponent(
-                                      widget: _moreSectionsCard(
-                                          Colors.transparent,
-                                          filteredItems[index]["title"],
-                                          filteredItems[index]["icon"],
-                                          filteredItems[index]["type"])));
+                              return Column(
+                                children: [
+                                  Expanded(
+                                      child: AddUserSheetComponent(
+                                          widget: _moreSectionsCard(
+                                              Colors.transparent,
+                                              filteredItems[index]["title"],
+                                              filteredItems[index]["icon"],
+                                              filteredItems[index]["type"]))),
+                                ],
+                              );
                             } else if (filteredItems[index]["type"] ==
                                 "addnewclient") {
                               return GestureDetector(
@@ -330,13 +347,17 @@ class _ActionButtonsSheetComponentState
                               );
                             } else if (filteredItems[index]["type"] ==
                                 "addvisit") {
-                              return Expanded(
-                                  child: AddVisitsComponent(
-                                      widget: _moreSectionsCard(
-                                          Colors.transparent,
-                                          filteredItems[index]["title"],
-                                          filteredItems[index]["icon"],
-                                          filteredItems[index]["type"])));
+                              return Column(
+                                children: [
+                                  Expanded(
+                                      child: AddVisitsComponent(
+                                          widget: _moreSectionsCard(
+                                              Colors.transparent,
+                                              filteredItems[index]["title"],
+                                              filteredItems[index]["icon"],
+                                              filteredItems[index]["type"]))),
+                                ],
+                              );
                             } else if (filteredItems[index]["type"] ==
                                 "arealist") {
                               return GestureDetector(
@@ -363,41 +384,70 @@ class _ActionButtonsSheetComponentState
                                     filteredItems[index]["type"]),
                               );
                             } else if (filteredItems[index]["type"] ==
+                                "referenceslist") {
+                              return GestureDetector(
+                                onTap: () {
+                                  Navigator.of(context)
+                                      .pushNamed("/referenceslist");
+                                },
+                                child: _moreSectionsCard(
+                                    Colors.transparent,
+                                    filteredItems[index]["title"],
+                                    filteredItems[index]["icon"],
+                                    filteredItems[index]["type"]),
+                              );
+                            } else if (filteredItems[index]["type"] ==
                                 "addnotes") {
-                              return Expanded(
-                                  child: AddNotesSheetComponent(
-                                      widget: _moreSectionsCard(
-                                          Colors.transparent,
-                                          filteredItems[index]["title"],
-                                          filteredItems[index]["icon"],
-                                          filteredItems[index]["type"])));
+                              return Column(
+                                children: [
+                                  Expanded(
+                                      child: AddNotesSheetComponent(
+                                          widget: _moreSectionsCard(
+                                              Colors.transparent,
+                                              filteredItems[index]["title"],
+                                              filteredItems[index]["icon"],
+                                              filteredItems[index]["type"]))),
+                                ],
+                              );
                             } else if (filteredItems[index]["type"] ==
                                 "schedulevisit") {
-                              return Expanded(
-                                  child: ScheduleVisitSheetComponent(
-                                      widget: _moreSectionsCard(
-                                          Colors.transparent,
-                                          filteredItems[index]["title"],
-                                          filteredItems[index]["icon"],
-                                          filteredItems[index]["type"])));
+                              return Column(
+                                children: [
+                                  Expanded(
+                                      child: ScheduleVisitSheetComponent(
+                                          widget: _moreSectionsCard(
+                                              Colors.transparent,
+                                              filteredItems[index]["title"],
+                                              filteredItems[index]["icon"],
+                                              filteredItems[index]["type"]))),
+                                ],
+                              );
                             } else if (filteredItems[index]["type"] ==
                                 "viewusers") {
-                              return Expanded(
-                                  child: AddVisitsComponent(
-                                      widget: _moreSectionsCard(
-                                          Colors.transparent,
-                                          filteredItems[index]["title"],
-                                          filteredItems[index]["icon"],
-                                          filteredItems[index]["type"])));
+                              return Column(
+                                children: [
+                                  Expanded(
+                                      child: AddVisitsComponent(
+                                          widget: _moreSectionsCard(
+                                              Colors.transparent,
+                                              filteredItems[index]["title"],
+                                              filteredItems[index]["icon"],
+                                              filteredItems[index]["type"]))),
+                                ],
+                              );
                             } else if (filteredItems[index]["type"] ==
                                 "addreferencetype") {
-                              return Expanded(
-                                  child: AddReferencetypeSheetComponenet(
-                                      widget: _moreSectionsCard(
-                                          Colors.transparent,
-                                          filteredItems[index]["title"],
-                                          filteredItems[index]["icon"],
-                                          filteredItems[index]["type"])));
+                              return Column(
+                                children: [
+                                  Expanded(
+                                      child: AddReferencetypeSheetComponenet(
+                                          widget: _moreSectionsCard(
+                                              Colors.transparent,
+                                              filteredItems[index]["title"],
+                                              filteredItems[index]["icon"],
+                                              filteredItems[index]["type"]))),
+                                ],
+                              );
                             } else if (filteredItems[index]["type"] ==
                                 "settings") {
                               return GestureDetector(
@@ -434,24 +484,22 @@ class _ActionButtonsSheetComponentState
 
   Widget _moreSectionsCard(
       Color color, String title, IconData icon, String type) {
-    return Expanded(
-      child: Column(children: [
-        Icon(
-          icon,
-          color: Constants.primaryColor,
-          size: 25,
-        ),
-        const SizedBox(
-          height: 12,
-        ),
-        Text(
-          title,
-          textAlign: TextAlign.center,
-          style: GoogleFonts.raleway(
-              fontSize: 13, fontWeight: FontWeight.normal, color: Colors.black),
-        )
-      ]),
-    );
+    return Column(children: [
+      Icon(
+        icon,
+        color: Constants.primaryColor,
+        size: 25,
+      ),
+      const SizedBox(
+        height: 12,
+      ),
+      Text(
+        title,
+        textAlign: TextAlign.center,
+        style: GoogleFonts.raleway(
+            fontSize: 13, fontWeight: FontWeight.normal, color: Colors.black),
+      )
+    ]);
   }
 
   @override

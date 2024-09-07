@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:personal_phone_dictionary/screens/login_screen.dart';
 import 'package:personal_phone_dictionary/utils/constants.dart';
 
@@ -11,14 +12,17 @@ class LogOutUserComponent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      backgroundColor: Colors.white,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.circular(5)),
       ),
-      title: const Text(
+      title: Text(
         "Confirmation",
+        style: GoogleFonts.raleway(),
       ),
-      content: const Text(
+      content: Text(
         "Are you sure you want to logout?",
+        style: GoogleFonts.raleway(),
       ),
       actions: [
         GestureDetector(
@@ -37,9 +41,9 @@ class LogOutUserComponent extends StatelessWidget {
                   color: Constants.dangerColor,
                   borderRadius: BorderRadius.circular(5)),
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-              child: const Text(
+              child: Text(
                 "Yes",
-                style: TextStyle(color: Colors.white),
+                style: GoogleFonts.raleway(color: Colors.white),
               ),
             )),
         GestureDetector(
@@ -50,7 +54,10 @@ class LogOutUserComponent extends StatelessWidget {
               decoration: BoxDecoration(
                   color: Colors.white, borderRadius: BorderRadius.circular(5)),
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-              child: const Text("No"),
+              child: Text(
+                "No",
+                style: GoogleFonts.raleway(),
+              ),
             )),
       ],
     );

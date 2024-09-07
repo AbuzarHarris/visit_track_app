@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:personal_phone_dictionary/api/signup_api.dart';
 import 'package:personal_phone_dictionary/components/date_picker_component.dart';
 import 'package:personal_phone_dictionary/components/text_input_component.dart';
+import 'package:personal_phone_dictionary/components/toasts.dart';
 import 'package:personal_phone_dictionary/components/verify_otp_component.dart';
 import 'package:personal_phone_dictionary/models/signup_model.dart';
 import 'package:personal_phone_dictionary/utils/constants.dart';
@@ -34,49 +36,51 @@ class _SignUpScreenState extends State<SignUpScreen> {
         _isPending = true;
       });
       if (_formKey.currentState!.validate() == true) {
-        if (_dateOfBirth == null) {
-          Helpers.showErrorSnackBar(context, "Please select date of birth!");
-        } else {
-          if (_password.text == _confirmPassword.text) {
-            SignupModel signupModel = SignupModel(
-                userId: 0,
-                firstName: _firstName.text,
-                lastName: _lastName.text,
-                fatherName: _fathersName.text,
-                mobileNo: _mobileNumber.text,
-                email: _email.text,
-                cnic: _cnic.text,
-                companyName: _companyName.text,
-                password: _password.text,
-                dateOfBirth: _dateOfBirth != null
-                    ? _dateOfBirth!.toIso8601String()
-                    : "");
+        // if (_dateOfBirth == null) {
+        //   ToastUtils.showErrorToast(
+        //       context: context,
+        //       message: "Please select date of birth!",
+        //       icon: const Icon(Icons.error));
+        // } else {
+        if (_password.text == _confirmPassword.text) {
+          SignupModel signupModel = SignupModel(
+              userId: 0,
+              firstName: _firstName.text,
+              lastName: _lastName.text,
+              fatherName: _fathersName.text,
+              mobileNo: _mobileNumber.text,
+              email: _email.text,
+              cnic: _cnic.text,
+              companyName: _companyName.text,
+              password: _password.text,
+              dateOfBirth:
+                  _dateOfBirth != null ? _dateOfBirth!.toIso8601String() : "");
 
-            var apiResponse = await newUserSignUp(signupModel);
+          var apiResponse = await newUserSignUp(signupModel);
 
-            if (apiResponse.success) {
-              if (mounted) {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => VerifyOtpComponent(
-                      userId: apiResponse.data["userID"].toString(),
-                      emailAddress: _email.text,
-                      shouldSendOTP: false,
-                    ),
+          if (apiResponse.success) {
+            if (mounted) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => VerifyOtpComponent(
+                    userId: apiResponse.data["userID"].toString(),
+                    emailAddress: _email.text,
+                    shouldSendOTP: false,
                   ),
-                );
-              }
-            } else {
-              if (mounted) {
-                Helpers.showErrorSnackBar(
-                    context, apiResponse.message ?? "Something went wrong!");
-              }
+                ),
+              );
             }
           } else {
-            Helpers.showErrorSnackBar(context, "Passwords do not match!");
+            if (mounted) {
+              Helpers.showErrorSnackBar(
+                  context, apiResponse.message ?? "Something went wrong!");
+            }
           }
+        } else {
+          Helpers.showErrorSnackBar(context, "Passwords do not match!");
         }
+        //}
       }
     } catch (e) {
       if (mounted) {
@@ -107,9 +111,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   const SizedBox(
                     height: 10,
                   ),
-                  const Text(
+                  Text(
                     "Sign Up",
-                    style: TextStyle(
+                    style: GoogleFonts.raleway(
                       fontSize: 40,
                       fontWeight: FontWeight.bold,
                     ),
@@ -117,9 +121,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   const SizedBox(
                     height: 5,
                   ),
-                  const Text(
+                  Text(
                     "Create an account",
-                    style: TextStyle(fontSize: 20),
+                    style: GoogleFonts.raleway(fontSize: 20),
                   ),
                   const SizedBox(
                     height: 10,
@@ -131,11 +135,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           controller: _firstName,
                           autofocus: false,
                           hintText: "First Name",
-                          labelStyle: const TextStyle(fontSize: 15),
-                          floatingLabelStyle: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.grey),
+                          labelStyle: GoogleFonts.raleway(fontSize: 15),
+                          floatingLabelStyle: GoogleFonts.raleway(
+                              fontSize: 18, color: Colors.grey),
                           contentPadding: const EdgeInsets.symmetric(
                             horizontal: 15.0,
                             vertical: 15.0,
@@ -160,11 +162,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           controller: _lastName,
                           autofocus: false,
                           hintText: "Last Name",
-                          labelStyle: const TextStyle(fontSize: 15),
-                          floatingLabelStyle: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.grey),
+                          labelStyle: GoogleFonts.raleway(fontSize: 15),
+                          floatingLabelStyle: GoogleFonts.raleway(
+                              fontSize: 18, color: Colors.grey),
                           contentPadding: const EdgeInsets.symmetric(
                             horizontal: 15.0,
                             vertical: 15.0,
@@ -189,11 +189,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           controller: _fathersName,
                           autofocus: false,
                           hintText: "Father's Name",
-                          labelStyle: const TextStyle(fontSize: 15),
-                          floatingLabelStyle: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.grey),
+                          labelStyle: GoogleFonts.raleway(fontSize: 15),
+                          floatingLabelStyle: GoogleFonts.raleway(
+                              fontSize: 18, color: Colors.grey),
                           contentPadding: const EdgeInsets.symmetric(
                             horizontal: 15.0,
                             vertical: 15.0,
@@ -218,11 +216,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           controller: _companyName,
                           autofocus: false,
                           hintText: "Company Name",
-                          labelStyle: const TextStyle(fontSize: 15),
-                          floatingLabelStyle: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.grey),
+                          labelStyle: GoogleFonts.raleway(fontSize: 15),
+                          floatingLabelStyle: GoogleFonts.raleway(
+                              fontSize: 18, color: Colors.grey),
                           contentPadding: const EdgeInsets.symmetric(
                             horizontal: 15.0,
                             vertical: 15.0,
@@ -241,11 +237,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           controller: _cnic,
                           autofocus: false,
                           hintText: "CNIC",
-                          labelStyle: const TextStyle(fontSize: 15),
-                          floatingLabelStyle: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.grey),
+                          labelStyle: GoogleFonts.raleway(fontSize: 15),
+                          floatingLabelStyle: GoogleFonts.raleway(
+                              fontSize: 18, color: Colors.grey),
                           contentPadding: const EdgeInsets.symmetric(
                             horizontal: 15.0,
                             vertical: 15.0,
@@ -270,11 +264,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           controller: _mobileNumber,
                           autofocus: false,
                           hintText: "Mobile No",
-                          labelStyle: const TextStyle(fontSize: 15),
-                          floatingLabelStyle: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.grey),
+                          labelStyle: GoogleFonts.raleway(fontSize: 15),
+                          floatingLabelStyle: GoogleFonts.raleway(
+                              fontSize: 18, color: Colors.grey),
                           contentPadding: const EdgeInsets.symmetric(
                             horizontal: 15.0,
                             vertical: 15.0,
@@ -289,25 +281,25 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                     ],
                   ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: DatePickerComponent(
-                          onDateSelected: (value) {
-                            _dateOfBirth = value;
-                          },
-                          hintText: "Date Of Birth",
-                          contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 15.0,
-                            vertical: 15.0,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                  // const SizedBox(
+                  //   height: 10,
+                  // ),
+                  // Row(
+                  //   children: [
+                  //     Expanded(
+                  //       child: DatePickerComponent(
+                  //         onDateSelected: (value) {
+                  //           _dateOfBirth = value;
+                  //         },
+                  //         hintText: "Date Of Birth",
+                  //         contentPadding: const EdgeInsets.symmetric(
+                  //           horizontal: 15.0,
+                  //           vertical: 15.0,
+                  //         ),
+                  //       ),
+                  //     ),
+                  //   ],
+                  // ),
                   const SizedBox(
                     height: 10,
                   ),
@@ -318,11 +310,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           controller: _email,
                           autofocus: false,
                           hintText: "Email",
-                          labelStyle: const TextStyle(fontSize: 15),
-                          floatingLabelStyle: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.grey),
+                          labelStyle: GoogleFonts.raleway(fontSize: 15),
+                          floatingLabelStyle: GoogleFonts.raleway(
+                              fontSize: 18, color: Colors.grey),
                           contentPadding: const EdgeInsets.symmetric(
                             horizontal: 15.0,
                             vertical: 15.0,
@@ -348,11 +338,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           controller: _password,
                           autofocus: false,
                           hintText: "Password",
-                          labelStyle: const TextStyle(fontSize: 15),
-                          floatingLabelStyle: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.grey),
+                          labelStyle: GoogleFonts.raleway(fontSize: 15),
+                          floatingLabelStyle: GoogleFonts.raleway(
+                              fontSize: 18, color: Colors.grey),
                           contentPadding: const EdgeInsets.symmetric(
                             horizontal: 15.0,
                             vertical: 15.0,
@@ -377,11 +365,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           controller: _confirmPassword,
                           autofocus: false,
                           hintText: "Confirm Password",
-                          labelStyle: const TextStyle(fontSize: 15),
-                          floatingLabelStyle: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.grey),
+                          labelStyle: GoogleFonts.raleway(fontSize: 15),
+                          floatingLabelStyle: GoogleFonts.raleway(
+                              fontSize: 18, color: Colors.grey),
                           contentPadding: const EdgeInsets.symmetric(
                             horizontal: 15.0,
                             vertical: 15.0,
@@ -411,28 +397,28 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               color: Constants.primaryColor, width: 1)),
                       width: MediaQuery.of(context).size.width,
                       child: _isPending
-                          ? const Row(
+                          ? Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                CircularProgressIndicator(
+                                const CircularProgressIndicator(
                                   color: Colors.white,
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   width: 10,
                                 ),
                                 Text(
                                   "Signing up...",
-                                  style: TextStyle(
+                                  style: GoogleFonts.raleway(
                                       fontSize: 18,
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold),
                                 ),
                               ],
                             )
-                          : const Center(
+                          : Center(
                               child: Text(
                                 "Sign Up",
-                                style: TextStyle(
+                                style: GoogleFonts.raleway(
                                     fontSize: 18,
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold),
@@ -452,17 +438,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       }
                     },
                     child: RichText(
-                      text: const TextSpan(
+                      text: TextSpan(
                         children: <TextSpan>[
                           TextSpan(
                             text: 'Already Have an Account? ',
-                            style: TextStyle(
-                                color: Color.fromARGB(255, 151, 151, 151),
+                            style: GoogleFonts.raleway(
+                                color: const Color.fromARGB(255, 151, 151, 151),
                                 fontSize: 12),
                           ),
                           TextSpan(
                             text: '  Login',
-                            style: TextStyle(
+                            style: GoogleFonts.raleway(
                                 color: Constants.primaryColor,
                                 fontWeight: FontWeight.bold,
                                 fontSize: 12),

@@ -6,9 +6,13 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:personal_phone_dictionary/api/area_apis.dart';
+import 'package:personal_phone_dictionary/api/references_api.dart';
+import 'package:personal_phone_dictionary/components/add_reference_sheet_component.dart';
 import 'package:personal_phone_dictionary/components/chips_input.dart';
 import 'package:personal_phone_dictionary/components/form_input_component.dart';
 import 'package:personal_phone_dictionary/components/single_dropdown_component.dart';
+import 'package:personal_phone_dictionary/models/dropdown_models.dart';
 import 'package:personal_phone_dictionary/utils/constants.dart';
 
 class AddNewContact extends StatefulWidget {
@@ -21,17 +25,10 @@ class AddNewContact extends StatefulWidget {
 class _AddNewContactState extends State<AddNewContact> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _internalReferenceController =
-      TextEditingController();
-  final TextEditingController _externalReferenceController =
-      TextEditingController();
   final TextEditingController _phoneNumberController = TextEditingController();
   final TextEditingController _phoneNumberController2 = TextEditingController();
   final TextEditingController _whatsappNumberController =
       TextEditingController();
-  final TextEditingController _segmentIDController = TextEditingController();
-  final TextEditingController _tehsilIDController = TextEditingController();
-  final TextEditingController _drawerTextController = TextEditingController();
   bool showPassword = false;
   bool? sameAsMobileNo = false;
 
@@ -226,83 +223,18 @@ class _AddNewContactState extends State<AddNewContact> {
     });
   }
 
-  void _addBottomSheet(String type, String title, String label) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      clipBehavior: Clip.antiAlias,
-      // default is Clip.none
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(20.0),
-          topRight: Radius.circular(20.0),
-        ),
-      ),
-      builder: (_) {
-        return DraggableScrollableSheet(
-          initialChildSize: 0.6,
-          maxChildSize: 0.6,
-          shouldCloseOnMinExtent: false,
-          expand: false,
-          builder: (_, controller) {
-            return Container(
-                color: Colors.white,
-                child: Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Text(
-                        title,
-                        style: GoogleFonts.raleway(
-                            fontSize: 20, fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: FormInputComponent(
-                              controller: _drawerTextController,
-                              autofocus: true,
-                              hintText: label,
-                              keyboardType: TextInputType.text,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      Row(
-                        children: [
-                          Expanded(
-                              child: Container(
-                            padding: const EdgeInsets.all(15),
-                            decoration: const BoxDecoration(
-                                color: Constants.primaryColor,
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10))),
-                            child: GestureDetector(
-                              child: Text(
-                                "SAVE",
-                                textAlign: TextAlign.center,
-                                style: GoogleFonts.raleway(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w600),
-                              ),
-                            ),
-                          ))
-                        ],
-                      )
-                    ],
-                  ),
-                ));
-          },
-        );
-      },
-    );
+  String? referenceID;
+  String? referenceTitle;
+  Future<List<ReferencesDropdownModel>> loadReferencesDropdown() async {
+    var data = await getReferencesDropdown();
+    return data;
+  }
+
+  String? areaID;
+  String? areaTitle;
+  Future<List<AreaDropdownModel>> loadAreasDropdown() async {
+    var data = await getAreasDropdown();
+    return data;
   }
 
   File? _image;
@@ -616,70 +548,60 @@ class _AddNewContactState extends State<AddNewContact> {
                       Row(
                         children: [
                           Expanded(
-                            child: SingleDropdownComponent(
-                              labelText: "Reference (Internal)",
-                              items: const ["Huzaifa", "Sajid", "Sami"],
-                              showSearchBox: true,
-                            ),
-                          ),
+                              child: FutureBuilder(
+                            future: loadReferencesDropdown(),
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData) {
+                                List<String>? stringList = snapshot.data
+                                    ?.map((model) => model.name)
+                                    .toList();
+
+                                return SingleDropdownComponent(
+                                  items: stringList ?? [],
+                                  labelText: "Reference",
+                                  selectedItem: referenceTitle,
+                                  showSearchBox: true,
+                                  onChange: (value) {
+                                    referenceID = snapshot.data
+                                        ?.firstWhere(
+                                            (item) => item.name == value)
+                                        .id;
+                                    referenceTitle = value;
+                                    return null;
+                                  },
+                                );
+                              } else if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return const Center(
+                                  child: CircularProgressIndicator(),
+                                );
+                              } else if (snapshot.hasError) {
+                                return Center(
+                                  child: Text(snapshot.error.toString()),
+                                );
+                              }
+                              return Container();
+                            },
+                          )),
                           const SizedBox(
                             width: 10,
                           ),
-                          Container(
-                            height: 44,
-                            width: 45,
-                            decoration: BoxDecoration(
-                                color: Colors.grey[400],
-                                borderRadius: const BorderRadius.all(
-                                    Radius.circular(10))),
-                            child: IconButton(
-                              onPressed: () {
-                                _addBottomSheet("internal",
-                                    "Add Internal Reference", "Name");
-                              },
-                              icon: const Icon(
+                          AddReferenceSheetComponent(
+                            edit: true,
+                            widget: Container(
+                              height: 44,
+                              width: 45,
+                              decoration: BoxDecoration(
+                                  color: Colors.grey[400],
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(10))),
+                              child: const Icon(
                                 Icons.person_add_alt_1,
                                 size: 20,
                                 color: Colors.white,
                               ),
                             ),
-                          )
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: SingleDropdownComponent(
-                              labelText: "Reference (External)",
-                              items: const ["Huzaifa", "Sajid", "Sami"],
-                              showSearchBox: true,
-                            ),
                           ),
-                          const SizedBox(
-                            width: 10,
-                          ),
-                          Container(
-                            height: 44,
-                            width: 45,
-                            decoration: BoxDecoration(
-                                color: Colors.grey[400],
-                                borderRadius: const BorderRadius.all(
-                                    Radius.circular(10))),
-                            child: IconButton(
-                              onPressed: () {
-                                _addBottomSheet("external",
-                                    "Add External Reference", "Name");
-                              },
-                              icon: const Icon(
-                                Icons.person_add_alt_1,
-                                size: 20,
-                                color: Colors.white,
-                              ),
-                            ),
-                          )
                         ],
                       ),
                       const SizedBox(
@@ -730,34 +652,60 @@ class _AddNewContactState extends State<AddNewContact> {
                       Row(
                         children: [
                           Expanded(
-                            child: SingleDropdownComponent(
-                              labelText: "Area",
-                              items: const ["Multan", "Lahore", "Karachi"],
-                              showSearchBox: true,
-                            ),
-                          ),
+                              child: FutureBuilder(
+                            future: loadAreasDropdown(),
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData) {
+                                List<String>? stringList = snapshot.data
+                                    ?.map((model) => model.name)
+                                    .toList();
+
+                                return SingleDropdownComponent(
+                                  items: stringList ?? [],
+                                  labelText: "Area",
+                                  selectedItem: areaTitle,
+                                  showSearchBox: true,
+                                  onChange: (value) {
+                                    areaID = snapshot.data
+                                        ?.firstWhere(
+                                            (item) => item.name == value)
+                                        .id;
+                                    areaTitle = value;
+                                    return null;
+                                  },
+                                );
+                              } else if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return const Center(
+                                  child: CircularProgressIndicator(),
+                                );
+                              } else if (snapshot.hasError) {
+                                return Center(
+                                  child: Text(snapshot.error.toString()),
+                                );
+                              }
+                              return Container();
+                            },
+                          )),
                           const SizedBox(
                             width: 10,
                           ),
-                          Container(
-                            height: 44,
-                            width: 45,
-                            decoration: BoxDecoration(
-                                color: Colors.grey[400],
-                                borderRadius: const BorderRadius.all(
-                                    Radius.circular(10))),
-                            child: IconButton(
-                              onPressed: () {
-                                _addBottomSheet(
-                                    "area", "Add New Area", "Title");
-                              },
-                              icon: const Icon(
-                                Icons.add_location_alt_rounded,
+                          AddReferenceSheetComponent(
+                            edit: true,
+                            widget: Container(
+                              height: 44,
+                              width: 45,
+                              decoration: BoxDecoration(
+                                  color: Colors.grey[400],
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(10))),
+                              child: const Icon(
+                                Icons.add_location,
                                 size: 20,
                                 color: Colors.white,
                               ),
                             ),
-                          )
+                          ),
                         ],
                       ),
                       const SizedBox(

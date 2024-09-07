@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:personal_phone_dictionary/api/reference_types_api.dart';
-import 'package:personal_phone_dictionary/components/add_referencetype_sheet_componenet.dart';
+import 'package:personal_phone_dictionary/api/references_api.dart';
+import 'package:personal_phone_dictionary/components/add_reference_sheet_component.dart';
 import 'package:personal_phone_dictionary/components/filtration_appbar_component.dart';
 import 'package:personal_phone_dictionary/components/toasts.dart';
-import 'package:personal_phone_dictionary/models/reference_type_model.dart';
+import 'package:personal_phone_dictionary/models/reference_model.dart';
 import 'package:personal_phone_dictionary/utils/common.dart';
 import 'package:personal_phone_dictionary/utils/constants.dart';
 
-class ReferenceTypeScreen extends StatefulWidget {
-  const ReferenceTypeScreen({super.key});
+class ReferencesScreen extends StatefulWidget {
+  const ReferencesScreen({super.key});
 
   @override
-  State<ReferenceTypeScreen> createState() => _ReferenceTypeScreenState();
+  State<ReferencesScreen> createState() => _ReferencesScreenState();
 }
 
-class _ReferenceTypeScreenState extends State<ReferenceTypeScreen> {
+class _ReferencesScreenState extends State<ReferencesScreen> {
   final filtrationItems = ["All", "Active", "In Active"];
 
   int _selectedFiltraionIndex = 0;
@@ -65,37 +65,7 @@ class _ReferenceTypeScreenState extends State<ReferenceTypeScreen> {
     ));
   }
 
-  Future<void> deleteReferenceType(int referenceTypeID) async {
-    try {
-      String msg = await deleteReferenceTypes(referenceTypeID);
-      if (msg == "") {
-        if (mounted) {
-          ToastUtils.showOkToast(
-              context: context,
-              message: "Record Deleted Successfully!",
-              icon: const Icon(Icons.check));
-          Navigator.of(context).pushNamed("/referencetypelist");
-        }
-      } else {
-        if (mounted) {
-          ToastUtils.showErrorToast(
-              context: context,
-              message: msg.replaceAll("Exception: Exception: ", ""),
-              icon: const Icon(Icons.error));
-        }
-      }
-    } catch (e) {
-      if (mounted) {
-        Navigator.of(context).pop();
-        ToastUtils.showErrorToast(
-            context: context,
-            message: e.toString().replaceAll("Exception: Exception: ", ""),
-            icon: const Icon(Icons.error));
-      }
-    }
-  }
-
-  Widget addressListItem(ReferenceTypeModel model) {
+  Widget addressListItem(ReferenceModel model) {
     return Container(
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
@@ -109,9 +79,23 @@ class _ReferenceTypeScreenState extends State<ReferenceTypeScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                model.referenceTypeTitle,
-                style: GoogleFonts.raleway(fontSize: 18),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    model.referenceTitle,
+                    style: GoogleFonts.raleway(fontSize: 18),
+                  ),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  Text(
+                    model.referenceTypeTitle,
+                    style: GoogleFonts.raleway(
+                        color: const Color.fromARGB(255, 151, 151, 151),
+                        fontSize: 12),
+                  )
+                ],
               ),
               Text(
                 CommonFunctions.getTimeAgo(datetime: model.entryDate),
@@ -135,8 +119,8 @@ class _ReferenceTypeScreenState extends State<ReferenceTypeScreen> {
               ),
               Row(
                 children: [
-                  AddReferencetypeSheetComponenet(
-                    referenceTypeModel: model,
+                  AddReferenceSheetComponent(
+                    referenceModel: model,
                     edit: true,
                     widget: Container(
                       padding: const EdgeInsets.all(8),
@@ -160,7 +144,7 @@ class _ReferenceTypeScreenState extends State<ReferenceTypeScreen> {
                       CommonFunctions.deleteRecordConfirmDialog(
                           context: context,
                           ontap: () {
-                            deleteReferenceType(model.referenceTypeID);
+                            delete(model.referenceID);
                           });
                     },
                     child: Container(
@@ -186,13 +170,12 @@ class _ReferenceTypeScreenState extends State<ReferenceTypeScreen> {
     );
   }
 
-  Future<List<ReferenceTypeModel>> getreferenceTypes() async {
-    Future<List<ReferenceTypeModel>> referenceTypes =
-        getAllReferenceTypes(null);
-    return referenceTypes;
+  Future<List<ReferenceModel>> getReferences() async {
+    Future<List<ReferenceModel>> areas = getAllReferences(null);
+    return areas;
   }
 
-  List<ReferenceTypeModel> _getFilteredData(List<ReferenceTypeModel> data) {
+  List<ReferenceModel> _getFilteredData(List<ReferenceModel> data) {
     if (_selectedFiltraionIndex == 0) {
       return data;
     } else if (_selectedFiltraionIndex == 1) {
@@ -206,6 +189,36 @@ class _ReferenceTypeScreenState extends State<ReferenceTypeScreen> {
     }
   }
 
+  Future<void> delete(int referenceID) async {
+    try {
+      String msg = await deleteReference(referenceID);
+      if (msg == "") {
+        if (mounted) {
+          ToastUtils.showOkToast(
+              context: context,
+              message: "Record Deleted Successfully!",
+              icon: const Icon(Icons.check));
+          Navigator.of(context).pushNamed("/referenceslist");
+        }
+      } else {
+        if (mounted) {
+          Navigator.of(context).pop();
+          ToastUtils.showErrorToast(
+              context: context,
+              message: msg.replaceAll("Exception: Exception: ", ""),
+              icon: const Icon(Icons.error));
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        ToastUtils.showErrorToast(
+            context: context,
+            message: e.toString().replaceAll("Exception: Exception: ", ""),
+            icon: const Icon(Icons.error));
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -215,7 +228,7 @@ class _ReferenceTypeScreenState extends State<ReferenceTypeScreen> {
         child: Column(
           children: [
             const FiltrationAppbarComponent(
-              title: "Reference Types",
+              title: "References",
             ),
             const SizedBox(
               height: 20,
@@ -226,7 +239,7 @@ class _ReferenceTypeScreenState extends State<ReferenceTypeScreen> {
             ),
             Expanded(
               child: FutureBuilder(
-                  future: getreferenceTypes(),
+                  future: getReferences(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Center(child: CircularProgressIndicator());
@@ -237,7 +250,7 @@ class _ReferenceTypeScreenState extends State<ReferenceTypeScreen> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Text(
-                              "No Reference Types found!",
+                              "No References's found!",
                               style: GoogleFonts.raleway(fontSize: 20),
                             ),
                             const SizedBox(
@@ -256,7 +269,7 @@ class _ReferenceTypeScreenState extends State<ReferenceTypeScreen> {
                                 child: Text(
                                   "Go Back",
                                   style: GoogleFonts.raleway(
-                                      color: Colors.white, fontSize: 18),
+                                      color: Colors.white, fontSize: 15),
                                 ),
                               ),
                             )
@@ -269,7 +282,7 @@ class _ReferenceTypeScreenState extends State<ReferenceTypeScreen> {
                       var filteredData = _getFilteredData(data);
 
                       return RefreshIndicator(
-                        onRefresh: getreferenceTypes,
+                        onRefresh: getReferences,
                         child: ListView.separated(
                           physics: const BouncingScrollPhysics(),
                           itemCount: filteredData.length,

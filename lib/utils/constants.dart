@@ -14,7 +14,7 @@ class Constants {
 }
 
 class APIConstants {
-  static const String baseUrl = 'http://192.168.9.110:85';
+  static const String baseUrl = 'http://edusoft.freeddns.org:122';
 }
 
 class SecureStorageKeys {

@@ -10,9 +10,14 @@ class FiltrationAppbarComponent extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        const Icon(
-          Icons.horizontal_rule,
-          size: 30,
+        GestureDetector(
+          onTap: () {
+            Navigator.of(context).pushNamed("/dashboard");
+          },
+          child: const Icon(
+            Icons.horizontal_rule,
+            size: 25,
+          ),
         ),
         Text(
           title,

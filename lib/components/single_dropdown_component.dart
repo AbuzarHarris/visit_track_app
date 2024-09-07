@@ -105,11 +105,11 @@ class SingleDropdownComponent extends StatelessWidget {
           labelText: labelText,
           hintText: hintText,
         ),
-        baseStyle: GoogleFonts.raleway(
-            fontSize: 15,
-            fontWeight: FontWeight.w500,
-            color: Colors.grey,
-            letterSpacing: 1),
+        // baseStyle: GoogleFonts.raleway(
+        //     fontSize: 15,
+        //     fontWeight: FontWeight.w500,
+        //     color: Colors.grey,
+        //     letterSpacing: 1),
       ),
       onChanged: onChange,
       validator: validator,

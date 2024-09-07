@@ -6,6 +6,7 @@ import 'package:personal_phone_dictionary/screens/home_screen.dart';
 import 'package:personal_phone_dictionary/screens/login_screen.dart';
 import 'package:personal_phone_dictionary/screens/otp_Verified.dart';
 import 'package:personal_phone_dictionary/screens/reference_type_screen.dart';
+import 'package:personal_phone_dictionary/screens/references_screen.dart';
 import 'package:personal_phone_dictionary/screens/sign_up_screen.dart';
 
 void main() {
@@ -57,6 +58,7 @@ class MyApp extends StatelessWidget {
         "/otpVerfied": (context) => const OtpVerified(),
         "/arealist": (context) => const AreaListScreen(),
         "/referencetypelist": (context) => const ReferenceTypeScreen(),
+        "/referenceslist": (context) => const ReferencesScreen(),
       },
     );
   }

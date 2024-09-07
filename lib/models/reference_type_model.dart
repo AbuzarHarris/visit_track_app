@@ -7,12 +7,14 @@ class ReferenceTypeModel {
   String referenceTypeTitle;
   int referenceTypeID;
   bool inActive;
+  String entryDate;
   ReferenceTypeModel({
     required this.companyID,
     required this.userID,
     required this.referenceTypeTitle,
     required this.referenceTypeID,
     required this.inActive,
+    required this.entryDate,
   });
 
   ReferenceTypeModel copyWith({
@@ -22,14 +24,15 @@ class ReferenceTypeModel {
     String? referenceTypeTitle,
     int? referenceTypeID,
     bool? inActive,
+    String? entryDate,
   }) {
     return ReferenceTypeModel(
-      companyID: companyID ?? this.companyID,
-      userID: userID ?? this.userID,
-      referenceTypeTitle: referenceTypeTitle ?? this.referenceTypeTitle,
-      referenceTypeID: referenceTypeID ?? this.referenceTypeID,
-      inActive: inActive ?? this.inActive,
-    );
+        companyID: companyID ?? this.companyID,
+        userID: userID ?? this.userID,
+        referenceTypeTitle: referenceTypeTitle ?? this.referenceTypeTitle,
+        referenceTypeID: referenceTypeID ?? this.referenceTypeID,
+        inActive: inActive ?? this.inActive,
+        entryDate: entryDate ?? this.entryDate);
   }
 
   Map<String, dynamic> toMap() {
@@ -39,6 +42,7 @@ class ReferenceTypeModel {
       'ReferenceTypeTitle': referenceTypeTitle,
       'ReferenceTypeID': referenceTypeID,
       'InActive': inActive,
+      'EntryDate': entryDate,
     };
   }
 
@@ -49,6 +53,7 @@ class ReferenceTypeModel {
       referenceTypeTitle: map['ReferenceTypeTitle'] as String,
       referenceTypeID: map['ReferenceTypeID'] as int,
       inActive: map['InActive'] as bool,
+      entryDate: map['EntryDate'] as String,
     );
   }
 
