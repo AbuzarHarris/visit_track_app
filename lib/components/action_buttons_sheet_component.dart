@@ -238,15 +238,8 @@ class _ActionButtonsSheetComponentState
                             if (filteredItems[index]["type"] == "viewclients") {
                               return GestureDetector(
                                 onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          CustomBottomNavigationBar(
-                                        index: 1,
-                                      ),
-                                    ),
-                                  );
+                                  Navigator.of(context)
+                                      .pushNamed("/clientslist");
                                 },
                                 child: _moreSectionsCard(
                                     Colors.transparent,

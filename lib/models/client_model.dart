@@ -1,45 +1,60 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
-class ClientMasterModel {
+import 'package:flutter/foundation.dart';
+
+class ClientModel {
   int companyID;
   int userID;
-  int clientID;
-  String clientName;
-  String phoneNumber;
-  String phoneNumber2;
-  String whatsappNumber;
-  int referenceID;
-  String referenceTitle;
-  int areaID;
-  String areaTitle;
-
-  ClientMasterModel({
+  int? clientID;
+  String? clientName;
+  String? phoneNumber;
+  String? phoneNumber2;
+  String? whatsappNumber;
+  int? referenceID;
+  String? referenceTitle;
+  int? areaID;
+  String? areaTitle;
+  List<String>? tags;
+  double? longitude;
+  double? latitude;
+  String? entryDate;
+  ClientModel({
     required this.companyID,
     required this.userID,
-    required this.clientID,
-    required this.clientName,
-    required this.phoneNumber,
-    required this.phoneNumber2,
-    required this.whatsappNumber,
-    required this.referenceID,
-    required this.referenceTitle,
-    required this.areaID,
-    required this.areaTitle,
+    this.clientID,
+    this.clientName,
+    this.phoneNumber,
+    this.phoneNumber2,
+    this.whatsappNumber,
+    this.referenceID,
+    this.referenceTitle,
+    this.areaID,
+    this.areaTitle,
+    this.tags,
+    this.longitude,
+    this.latitude,
+    this.entryDate,
   });
 
-  ClientMasterModel copyWith(
-      {int? companyID,
-      int? userID,
-      int? clientID,
-      String? clientName,
-      String? phoneNumber,
-      String? phoneNumber2,
-      String? whatsappNumber,
-      int? referenceID,
-      String? referenceTitle,
-      int? areaID,
-      String? areaTitle}) {
-    return ClientMasterModel(
+  ClientModel copyWith({
+    int? companyID,
+    int? userID,
+    int? clientID,
+    String? clientName,
+    String? phoneNumber,
+    String? phoneNumber2,
+    String? whatsappNumber,
+    int? referenceID,
+    String? referenceTitle,
+    int? areaID,
+    String? areaTitle,
+    List<String>? tags,
+    double? longitude,
+    double? latitude,
+    String? entryDate,
+  }) {
+    return ClientModel(
       companyID: companyID ?? this.companyID,
       userID: userID ?? this.userID,
       clientID: clientID ?? this.clientID,
@@ -51,68 +66,162 @@ class ClientMasterModel {
       referenceTitle: referenceTitle ?? this.referenceTitle,
       areaID: areaID ?? this.areaID,
       areaTitle: areaTitle ?? this.areaTitle,
+      tags: tags ?? this.tags,
+      longitude: longitude ?? this.longitude,
+      latitude: latitude ?? this.latitude,
+      entryDate: entryDate ?? this.entryDate,
     );
   }
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      'CompanyID': companyID,
-      'UserID': userID,
-      'ClientID': clientID,
-      'ClientName': clientName,
-      'PhoneNumber': phoneNumber,
-      'PhoneNumber2': phoneNumber2,
-      'WhatsappNumber': whatsappNumber,
-      'ReferenceID': referenceID,
-      'ReferenceTitle': referenceTitle,
-      'AreaID': areaID,
-      'AreaTitle': areaTitle,
+      'companyID': companyID,
+      'userID': userID,
+      'clientID': clientID,
+      'clientName': clientName,
+      'phoneNumber': phoneNumber,
+      'phoneNumber2': phoneNumber2,
+      'whatsappNumber': whatsappNumber,
+      'referenceID': referenceID,
+      'referenceTitle': referenceTitle,
+      'areaID': areaID,
+      'areaTitle': areaTitle,
+      'tags': tags,
+      'longitude': longitude,
+      'latitude': latitude,
+      'entryDate': entryDate,
     };
   }
 
-  factory ClientMasterModel.fromMap(Map<String, dynamic> map) {
-    return ClientMasterModel(
-      companyID: map['CompanyID'] as int,
-      userID: map['UserID'] as int,
-      clientID: map['ClientID'] as int,
-      clientName: map['ClientName'] as String,
-      phoneNumber: map['PhoneNumber'] as String,
-      phoneNumber2: map['PhoneNumber2'] as String,
-      whatsappNumber: map['WhatsappNumber'] as String,
-      referenceID: map['ReferenceID'] as int,
-      referenceTitle: map['ReferenceTitle'] as String,
-      areaID: map['AreaID'] as int,
-      areaTitle: map['AreaTitle'] as String,
+  factory ClientModel.fromMap(Map<String, dynamic> map) {
+    return ClientModel(
+      companyID: map['companyID'] as int,
+      userID: map['userID'] as int,
+      clientID: map['clientID'] != null ? map['clientID'] as int : null,
+      clientName:
+          map['clientName'] != null ? map['clientName'] as String : null,
+      phoneNumber:
+          map['phoneNumber'] != null ? map['phoneNumber'] as String : null,
+      phoneNumber2:
+          map['phoneNumber2'] != null ? map['phoneNumber2'] as String : null,
+      whatsappNumber: map['whatsappNumber'] != null
+          ? map['whatsappNumber'] as String
+          : null,
+      referenceID:
+          map['referenceID'] != null ? map['referenceID'] as int : null,
+      referenceTitle: map['referenceTitle'] != null
+          ? map['referenceTitle'] as String
+          : null,
+      areaID: map['areaID'] != null ? map['areaID'] as int : null,
+      areaTitle: map['areaTitle'] != null ? map['areaTitle'] as String : null,
+      tags: map['tags'] != null
+          ? List<String>.from((map['tags'] as List<String>))
+          : null,
+      longitude: map['longitude'] != null ? map['longitude'] as double : null,
+      latitude: map['latitude'] != null ? map['latitude'] as double : null,
+      entryDate: map['entryDate'] != null ? map['entryDate'] as String : null,
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory ClientMasterModel.fromJson(String source) =>
-      ClientMasterModel.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory ClientModel.fromJson(String source) =>
+      ClientModel.fromMap(json.decode(source) as Map<String, dynamic>);
+
+  @override
+  String toString() {
+    return 'ClientModel(companyID: $companyID, userID: $userID, clientID: $clientID, clientName: $clientName, phoneNumber: $phoneNumber, phoneNumber2: $phoneNumber2, whatsappNumber: $whatsappNumber, referenceID: $referenceID, referenceTitle: $referenceTitle, areaID: $areaID, areaTitle: $areaTitle, tags: $tags, longitude: $longitude, latitude: $latitude, entryDate: $entryDate)';
+  }
+
+  @override
+  bool operator ==(covariant ClientModel other) {
+    if (identical(this, other)) return true;
+
+    return other.companyID == companyID &&
+        other.userID == userID &&
+        other.clientID == clientID &&
+        other.clientName == clientName &&
+        other.phoneNumber == phoneNumber &&
+        other.phoneNumber2 == phoneNumber2 &&
+        other.whatsappNumber == whatsappNumber &&
+        other.referenceID == referenceID &&
+        other.referenceTitle == referenceTitle &&
+        other.areaID == areaID &&
+        other.areaTitle == areaTitle &&
+        listEquals(other.tags, tags) &&
+        other.longitude == longitude &&
+        other.latitude == latitude &&
+        other.entryDate == entryDate;
+  }
+
+  @override
+  int get hashCode {
+    return companyID.hashCode ^
+        userID.hashCode ^
+        clientID.hashCode ^
+        clientName.hashCode ^
+        phoneNumber.hashCode ^
+        phoneNumber2.hashCode ^
+        whatsappNumber.hashCode ^
+        referenceID.hashCode ^
+        referenceTitle.hashCode ^
+        areaID.hashCode ^
+        areaTitle.hashCode ^
+        tags.hashCode ^
+        longitude.hashCode ^
+        latitude.hashCode ^
+        entryDate.hashCode;
+  }
 }
 
-class TagsModel {
-  String tag;
-  TagsModel({
-    required this.tag,
+class TagsDropdownModel {
+  int companyID;
+  int userID;
+  TagsDropdownModel({
+    required this.companyID,
+    required this.userID,
   });
-  factory TagsModel.fromJson(Map<String, dynamic> json) {
-    return TagsModel(
-      tag: json['Tag'] ?? '',
+
+  TagsDropdownModel copyWith({
+    int? companyID,
+    int? userID,
+  }) {
+    return TagsDropdownModel(
+      companyID: companyID ?? this.companyID,
+      userID: userID ?? this.userID,
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'Tag': tag,
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'companyID': companyID,
+      'userID': userID,
     };
   }
-}
 
-class ClientModel {
-  ClientMasterModel master;
-  List<TagsModel> tagsDetail;
+  factory TagsDropdownModel.fromMap(Map<String, dynamic> map) {
+    return TagsDropdownModel(
+      companyID: map['CompanyID'] as int,
+      userID: map['UserID'] as int,
+    );
+  }
 
-  ClientModel({required this.master, required this.tagsDetail});
+  String toJson() => json.encode(toMap());
+
+  factory TagsDropdownModel.fromJson(String source) =>
+      TagsDropdownModel.fromMap(json.decode(source) as Map<String, dynamic>);
+
+  @override
+  String toString() =>
+      'TagsDropdownModel(companyID: $companyID, userID: $userID)';
+
+  @override
+  bool operator ==(covariant TagsDropdownModel other) {
+    if (identical(this, other)) return true;
+
+    return other.companyID == companyID && other.userID == userID;
+  }
+
+  @override
+  int get hashCode => companyID.hashCode ^ userID.hashCode;
 }
