@@ -7,16 +7,22 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:personal_phone_dictionary/api/area_apis.dart';
+import 'package:personal_phone_dictionary/api/client_api.dart';
 import 'package:personal_phone_dictionary/api/references_api.dart';
 import 'package:personal_phone_dictionary/components/add_reference_sheet_component.dart';
 import 'package:personal_phone_dictionary/components/chips_input.dart';
 import 'package:personal_phone_dictionary/components/form_input_component.dart';
 import 'package:personal_phone_dictionary/components/single_dropdown_component.dart';
+import 'package:personal_phone_dictionary/components/toasts.dart';
+import 'package:personal_phone_dictionary/models/client_model.dart';
 import 'package:personal_phone_dictionary/models/dropdown_models.dart';
 import 'package:personal_phone_dictionary/utils/constants.dart';
+import 'package:personal_phone_dictionary/utils/secure_strorage.dart';
 
 class AddNewContact extends StatefulWidget {
-  const AddNewContact({super.key});
+  final ClientModel? model;
+  final bool edit;
+  const AddNewContact({super.key, this.model, this.edit = false});
 
   @override
   State<AddNewContact> createState() => _AddNewContactState();
@@ -47,12 +53,7 @@ class _AddNewContactState extends State<AddNewContact> {
     'Four',
     'Four'
   ];
-  List<String> tagsData = <String>[
-    'Business',
-    'Doctor',
-    'Software',
-    'Food Chain'
-  ];
+  late List<String> tagsData = <String>[];
   final FocusNode _chipFocusNode = FocusNode();
   List<String> selectedTags = <String>[];
   List<String> _suggestions = <String>[];
@@ -124,8 +125,25 @@ class _AddNewContactState extends State<AddNewContact> {
 
   @override
   void initState() {
-    super.initState();
     _checkLocationPermissions();
+    _getTagsList();
+    super.initState();
+  }
+
+  Future<void> _getTagsList() async {
+    SecureStorage secureStorage = SecureStorage();
+    String userID = await secureStorage.readSecureData("userID");
+    String companyID = await secureStorage.readSecureData("companyID");
+    TagsDropdownModel model = TagsDropdownModel(
+        companyID: int.parse(companyID), userID: int.parse(userID));
+
+    final response = await getTagsListAsync(model);
+
+    if (response.success == true) {
+      setState(() {
+        tagsData = response.data!;
+      });
+    }
   }
 
   @override
@@ -425,6 +443,68 @@ class _AddNewContactState extends State<AddNewContact> {
         ),
       ),
     );
+  }
+
+  Future<void> _onSubmit() async {
+    try {
+      if (_nameController.text.isEmpty) {
+        ToastUtils.showErrorToast(
+            context: context,
+            message: "Please enter client name!",
+            icon: const Icon(Icons.error));
+      } else {
+        SecureStorage secureStorage = SecureStorage();
+        String userID = await secureStorage.readSecureData("userID");
+        String companyID = await secureStorage.readSecureData("companyID");
+
+        ClientModel model = ClientModel(
+            companyID: int.parse(companyID),
+            userID: int.parse(userID),
+            entryDate: DateTime.now().toString(),
+            areaID: areaID != null ? int.parse(areaID!) : 0,
+            areaTitle: "",
+            clientID: 0,
+            clientName: _nameController.text,
+            latitude: _currentPosition?.latitude,
+            longitude: _currentPosition?.longitude,
+            phoneNumber2: _phoneNumberController2.text,
+            phoneNumber: _phoneNumberController.text,
+            referenceID: referenceID != null ? int.parse(referenceID!) : 0,
+            referenceTitle: "",
+            tags: selectedTags,
+            whatsappNumber: _whatsappNumberController.text);
+
+        var apiResponse = await insertUpdateClientAsync(model, _image);
+
+        if (apiResponse.success) {
+          if (mounted) {
+            ToastUtils.showOkToast(
+                context: context,
+                message: "Record Saved Successfully!",
+                icon: const Icon(Icons.check));
+
+            Navigator.of(context).pop();
+            if (widget.edit == true) {
+              Navigator.of(context).pushNamed("/clientslist");
+            }
+          }
+        } else {
+          if (mounted) {
+            ToastUtils.showErrorToast(
+                context: context,
+                message: apiResponse.message.toString(),
+                icon: const Icon(Icons.error));
+          }
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        ToastUtils.showErrorToast(
+            context: context,
+            message: e.toString(),
+            icon: const Icon(Icons.error));
+      }
+    }
   }
 
   @override
@@ -814,7 +894,7 @@ class _AddNewContactState extends State<AddNewContact> {
         child: Padding(
           padding: const EdgeInsets.fromLTRB(25, 0, 0, 0),
           child: FloatingActionButton(
-            onPressed: () {},
+            onPressed: _onSubmit,
             backgroundColor: Colors.blue[900],
             child: const Icon(
               Icons.save_rounded,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:personal_phone_dictionary/components/bottom_navigation_bar.dart';
 import 'package:personal_phone_dictionary/screens/add_new_contact.dart';
 import 'package:personal_phone_dictionary/screens/area_list_screen.dart';
+import 'package:personal_phone_dictionary/screens/client_list_screen.dart';
 import 'package:personal_phone_dictionary/screens/home_screen.dart';
 import 'package:personal_phone_dictionary/screens/login_screen.dart';
 import 'package:personal_phone_dictionary/screens/otp_Verified.dart';
@@ -59,6 +60,7 @@ class MyApp extends StatelessWidget {
         "/arealist": (context) => const AreaListScreen(),
         "/referencetypelist": (context) => const ReferenceTypeScreen(),
         "/referenceslist": (context) => const ReferencesScreen(),
+        "/clientslist": (context) => const ClientListScreen(),
       },
     );
   }
